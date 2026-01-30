@@ -13,3 +13,17 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum TodoStatus {
+  UNDONE
+  STARTED
+  DONE
+}
+
+model Todo {
+  id        String     @id @default(cuid())
+  name      String
+  status    TodoStatus @default(UNDONE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
