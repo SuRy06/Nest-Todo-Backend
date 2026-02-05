@@ -16,7 +16,7 @@ datasource db {
 
 enum TodoStatus {
   UNDONE
-  STARTED
+  INPROGRESS
   DONE
 }
 

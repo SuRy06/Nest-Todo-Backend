@@ -3,8 +3,8 @@
 # ------------------------------------------------------
 
 input CreateTodoInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """The name of the todo item"""
+  name: String!
 }
 
 """
@@ -34,12 +34,13 @@ type Todo {
 """Current status of a todo item"""
 enum TodoStatus {
   DONE
-  STARTED
+  INPROGRESS
   UNDONE
 }
 
 input UpdateTodoInput {
-  """Example field (placeholder)"""
-  exampleField: Int
   id: Int!
+
+  """The name of the todo item"""
+  name: String
 }

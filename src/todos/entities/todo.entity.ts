@@ -8,7 +8,7 @@ import {
 
 export enum TodoStatus {
   UNDONE = 'UNDONE',
-  STARTED = 'STARTED',
+  INPROGRESS = 'INPROGRESS',
   DONE = 'DONE',
 }
 
