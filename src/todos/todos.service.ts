@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateTodoInput } from './dto/create-todo.input';
 import { UpdateTodoInput } from './dto/update-todo.input';
 import { PrismaService } from '../prisma.service';
+import { TodoStatus } from 'generated/prisma/enums';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class TodosService {
@@ -19,9 +21,8 @@ export class TodosService {
 
       return {
         id: newTodo.id, // Example ID generation
-        // id: 123, // Example ID generation
         name,
-        status: 'UNDONE', // Default status
+        status: TodoStatus.UNDONE,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -31,19 +32,43 @@ export class TodosService {
     }
   }
 
-  findAll() {
-    return `This action returns all todos`;
+  async findAll() {
+    try {
+      const todos = await this.prisma.todo.findMany();
+      return todos;
+    } catch (error) {
+      console.error('Error fetching todos:', error);
+      throw new Error('Could not fetch todos');
+    }
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} todo`;
   }
 
-  update(id: number, updateTodoInput: UpdateTodoInput) {
-    return `This action updates a #${id} todo`;
+  async update(id: string, updateTodoInput: UpdateTodoInput) {
+    try {
+      const updatedTodo = await this.prisma.todo.update({
+        where: { id },
+        data: { ...updateTodoInput },
+      });
+
+      return updatedTodo;
+    } catch (error) {
+      console.error('Error updating todo:', error);
+      throw new Error('Could not update the todo');
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} todo`;
+  async remove(id: string) {
+    try {
+      await this.prisma.todo.delete({
+        where: { id },
+      });
+      return `Deleted Successfully`;
+    } catch (error) {
+      console.error('Error deleting todo:', error);
+      throw new Error('Could not delete the todo');
+    }
   }
 }

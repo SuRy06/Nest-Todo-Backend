@@ -14,12 +14,12 @@ scalar DateTime
 
 type Mutation {
   createTodo(createTodoInput: CreateTodoInput!): Todo!
-  removeTodo(id: Int!): Todo!
+  removeTodo(id: String!): Todo!
   updateTodo(updateTodoInput: UpdateTodoInput!): Todo!
 }
 
 type Query {
-  todo(id: Int!): Todo!
+  todo(id: String!): Todo!
   todos: [Todo!]!
 }
 
@@ -39,8 +39,7 @@ enum TodoStatus {
 }
 
 input UpdateTodoInput {
-  id: Int!
-
-  """The name of the todo item"""
+  id: String!
   name: String
+  status: TodoStatus
 }

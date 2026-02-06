@@ -19,7 +19,7 @@ export class TodosResolver {
   }
 
   @Query(() => Todo, { name: 'todo' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.todosService.findOne(id);
   }
 
@@ -29,7 +29,7 @@ export class TodosResolver {
   }
 
   @Mutation(() => Todo)
-  removeTodo(@Args('id', { type: () => Int }) id: number) {
+  removeTodo(@Args('id', { type: () => String }) id: string) {
     return this.todosService.remove(id);
   }
 }
