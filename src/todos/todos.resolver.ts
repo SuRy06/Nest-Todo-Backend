@@ -3,6 +3,7 @@ import { TodosService } from './todos.service';
 import { Todo } from './entities/todo.entity';
 import { CreateTodoInput } from './dto/create-todo.input';
 import { UpdateTodoInput } from './dto/update-todo.input';
+import { TodoPage } from './dto/todo-page.object';
 
 @Resolver(() => Todo)
 export class TodosResolver {
@@ -13,9 +14,14 @@ export class TodosResolver {
     return this.todosService.create(createTodoInput);
   }
 
-  @Query(() => [Todo], { name: 'todos' })
-  findAll() {
-    return this.todosService.findAll();
+  @Query(() => TodoPage, { name: 'todos' })
+  findAll(
+    @Args('skip', { type: () => Int, defaultValue: 0 })
+    skip?: number,
+    @Args('take', { type: () => Int, defaultValue: 10 })
+    take?: number,
+  ) {
+    return this.todosService.findAll({ skip, take });
   }
 
   @Query(() => Todo, { name: 'todo' })

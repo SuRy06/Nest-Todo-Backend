@@ -20,7 +20,7 @@ type Mutation {
 
 type Query {
   todo(id: String!): Todo!
-  todos: [Todo!]!
+  todos(skip: Int! = 0, take: Int! = 10): TodoPage!
 }
 
 type Todo {
@@ -29,6 +29,11 @@ type Todo {
   name: String!
   status: TodoStatus!
   updatedAt: DateTime!
+}
+
+type TodoPage {
+  items: [Todo!]!
+  totalCount: Int!
 }
 
 """Current status of a todo item"""

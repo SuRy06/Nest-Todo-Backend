@@ -32,10 +32,18 @@ export class TodosService {
     }
   }
 
-  async findAll() {
+  async findAll({ skip, take }: { skip?: number; take?: number } = {}) {
     try {
-      const todos = await this.prisma.todo.findMany();
-      return todos;
+      const [items, totalCount] = await Promise.all([
+        this.prisma.todo.findMany({
+          skip,
+          take,
+          orderBy: { createdAt: 'desc' },
+        }),
+        this.prisma.todo.count(),
+      ]);
+
+      return { items, totalCount };
     } catch (error) {
       console.error('Error fetching todos:', error);
       throw new Error('Could not fetch todos');
