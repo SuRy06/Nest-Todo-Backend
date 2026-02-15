@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateTodoInput } from './dto/create-todo.input';
 import { UpdateTodoInput } from './dto/update-todo.input';
 import { PrismaService } from '../prisma.service';
-import { TodoStatus } from 'generated/prisma/enums';
-import { throwError } from 'rxjs';
+import { TodoStatus } from './entities/todo.entity';
 
 @Injectable()
 export class TodosService {
@@ -32,15 +31,21 @@ export class TodosService {
     }
   }
 
-  async findAll({ skip, take }: { skip?: number; take?: number } = {}) {
+  async findAll({
+    skip,
+    take,
+    statuses,
+  }: { skip?: number; take?: number; statuses?: TodoStatus[] } = {}) {
     try {
+      const where = statuses?.length ? { status: { in: statuses } } : undefined;
       const [items, totalCount] = await Promise.all([
         this.prisma.todo.findMany({
           skip,
           take,
+          where,
           orderBy: { createdAt: 'desc' },
         }),
-        this.prisma.todo.count(),
+        this.prisma.todo.count({ where }),
       ]);
 
       return { items, totalCount };
@@ -56,6 +61,32 @@ export class TodosService {
 
   async update(id: string, updateTodoInput: UpdateTodoInput) {
     try {
+      const existingTodo = await this.prisma.todo.findUnique({
+        where: { id },
+      });
+      if (!existingTodo) {
+        throw new Error('Todo not found');
+      }
+
+      if (
+        updateTodoInput.status === 'DONE' &&
+        existingTodo.status === 'UNDONE'
+      ) {
+        throw new Error('Cannot move an UNDONE todo directly to DONE');
+      }
+      if (
+        updateTodoInput.status === 'INPROGRESS' &&
+        existingTodo.status === 'DONE'
+      ) {
+        throw new Error('Cannot move a DONE todo back to INPROGRESS');
+      }
+      if (
+        updateTodoInput.status === 'UNDONE' &&
+        existingTodo.status === 'DONE'
+      ) {
+        throw new Error('Cannot move a DONE todo directly to UNDONE');
+      }
+
       const updatedTodo = await this.prisma.todo.update({
         where: { id },
         data: { ...updateTodoInput },
@@ -64,7 +95,7 @@ export class TodosService {
       return updatedTodo;
     } catch (error) {
       console.error('Error updating todo:', error);
-      throw new Error('Could not update the todo');
+      throw Error(error.message || 'Could not update the todo');
     }
   }
 

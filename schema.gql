@@ -20,7 +20,7 @@ type Mutation {
 
 type Query {
   todo(id: String!): Todo!
-  todos(skip: Int! = 0, take: Int! = 10): TodoPage!
+  todos(skip: Int! = 0, statuses: [TodoStatus!], take: Int! = 10): TodoPage!
 }
 
 type Todo {

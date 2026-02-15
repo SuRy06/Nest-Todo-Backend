@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { TodosService } from './todos.service';
-import { Todo } from './entities/todo.entity';
+import { Todo, TodoStatus } from './entities/todo.entity';
 import { CreateTodoInput } from './dto/create-todo.input';
 import { UpdateTodoInput } from './dto/update-todo.input';
 import { TodoPage } from './dto/todo-page.object';
@@ -20,8 +20,10 @@ export class TodosResolver {
     skip?: number,
     @Args('take', { type: () => Int, defaultValue: 10 })
     take?: number,
+    @Args('statuses', { type: () => [TodoStatus], nullable: true })
+    statuses?: TodoStatus[],
   ) {
-    return this.todosService.findAll({ skip, take });
+    return this.todosService.findAll({ skip, take, statuses });
   }
 
   @Query(() => Todo, { name: 'todo' })
