@@ -14,7 +14,7 @@ scalar DateTime
 
 type Mutation {
   createTodo(createTodoInput: CreateTodoInput!): Todo!
-  removeTodo(id: String!): Todo!
+  removeTodo(id: String!): String!
   updateTodo(updateTodoInput: UpdateTodoInput!): Todo!
 }
 
