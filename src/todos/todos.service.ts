@@ -8,13 +8,14 @@ import { TodoStatus } from './entities/todo.entity';
 export class TodosService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createTodoInput: CreateTodoInput) {
+  async create(createTodoInput: CreateTodoInput, userId: string) {
     try {
       const { name } = createTodoInput;
       // Here you would typically interact with your database to create the todo item
       const newTodo = await this.prisma.todo.create({
         data: {
           name,
+          userId,
         },
       });
 
@@ -35,9 +36,22 @@ export class TodosService {
     skip,
     take,
     statuses,
-  }: { skip?: number; take?: number; statuses?: TodoStatus[] } = {}) {
+    userId,
+  }: {
+    skip?: number;
+    take?: number;
+    statuses?: TodoStatus[];
+    userId?: string;
+  } = {}) {
     try {
-      const where = statuses?.length ? { status: { in: statuses } } : undefined;
+      const where: any = {};
+      if (statuses?.length) {
+        where.status = { in: statuses };
+      }
+      if (userId) {
+        where.userId = userId;
+      }
+
       const [items, totalCount] = await Promise.all([
         this.prisma.todo.findMany({
           skip,

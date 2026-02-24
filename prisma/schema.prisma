@@ -20,10 +20,24 @@ enum TodoStatus {
   DONE
 }
 
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  fullName  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  todos     Todo[]
+}
+
 model Todo {
   id        String     @id @default(cuid())
   name      String
   status    TodoStatus @default(UNDONE)
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+
+  @@index([userId])
 }

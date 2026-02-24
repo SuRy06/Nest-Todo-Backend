@@ -7,6 +7,11 @@ input CreateTodoInput {
   name: String!
 }
 
+input CreateUserInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -14,13 +19,18 @@ scalar DateTime
 
 type Mutation {
   createTodo(createTodoInput: CreateTodoInput!): Todo!
+  createUser(createUserInput: CreateUserInput!): User!
   removeTodo(id: String!): String!
+  removeUser(id: Int!): User!
   updateTodo(updateTodoInput: UpdateTodoInput!): Todo!
+  updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
 type Query {
   todo(id: String!): Todo!
   todos(skip: Int! = 0, statuses: [TodoStatus!], take: Int! = 10): TodoPage!
+  user(id: Int!): User!
+  users: [User!]!
 }
 
 type Todo {
@@ -47,4 +57,18 @@ input UpdateTodoInput {
   id: String!
   name: String
   status: TodoStatus
+}
+
+input UpdateUserInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+type User {
+  createdAt: DateTime!
+  email: String!
+  fullName: String
+  id: ID!
+  updatedAt: DateTime!
 }
