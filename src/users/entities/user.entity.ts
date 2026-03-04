@@ -12,7 +12,7 @@ export class User {
   password: string;
 
   @Field({ nullable: true })
-  fullName?: string;
+  fullName: string;
 
   @Field()
   createdAt: Date;

@@ -12,36 +12,42 @@ interface CreateUserData {
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateUserData): Promise<User> {
+  async create(data: CreateUserData) {
+    // async create(data: CreateUserData): Promise<User> { //add return type later
     return this.prisma.user.create({
       data,
     });
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll() {
+    // async findAll(): Promise<User[]> { // add return type later
     return this.prisma.user.findMany();
   }
 
-  async findOne(id: string): Promise<User | null> {
+  async findOne(id: string) {
+    // async findOne(id: string): Promise<User | null> { // add return type later
     return this.prisma.user.findUnique({
       where: { id },
     });
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string) {
+    // async findByEmail(email: string): Promise<User | null> { // add return type later
     return this.prisma.user.findUnique({
       where: { email },
     });
   }
 
-  async update(id: string, data: Partial<CreateUserData>): Promise<User> {
+  async update(id: string, data: Partial<CreateUserData>) {
+    // async update(id: string, data: Partial<CreateUserData>): Promise<User> { // add return type later
     return this.prisma.user.update({
       where: { id },
       data,
     });
   }
 
-  async remove(id: string): Promise<User> {
+  async remove(id: string) {
+    // async remove(id: string): Promise<User> { // add return type later
     return this.prisma.user.delete({
       where: { id },
     });
